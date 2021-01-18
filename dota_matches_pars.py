@@ -11,22 +11,24 @@ HEADERS = {
     'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36'
     }
 
+
+
 def get_html(url, params=None):
     r = requests.get(url, headers=HEADERS)
     return r
 
 def get_content(html):
     soup = BeautifulSoup(html, 'html.parser')
-    items = soup.find_all('tr')
+    items = soup.find('tbody').find_all('tr')
     content = []
     for item in items:
         content.append(
             {
-                'hero':item.find('td', class_='cell-xlarge').get('data-value'), 
+                'hero':item.find('td', class_='cell-xlarge').text, 
                 'matches':item.find('td').get('data-value'),
                 'pickrate':item.find('td').get('data-value'),
                 'winrate':item.find('td').get('data-value'),
-                'kda':item.find('td', class_='r-none-mobile').get('data-value')
+                'kda':item.find('td', class_='r-none-mobile').text
                 }
             )
     return content
